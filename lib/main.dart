@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:zelda_map/ui/AuthScreen/auth_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:zelda_map/services/supabase_service.dart';
+import 'package:zelda_map/ui/auth_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
+
+  await SupabaseService.init();
+
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -11,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Mon Projet Supabase',
+      title: 'Les copines',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,

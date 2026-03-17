@@ -11,7 +11,6 @@ class UserModel {
     this.avatarUrl,
   });
 
-  // Pour plus tard : transformer le JSON de Supabase en objet Dart
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'],

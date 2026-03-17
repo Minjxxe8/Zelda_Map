@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/auth_provider.dart';
+import 'profile_screen.dart';
 
-class AuthScreen extends StatefulWidget {
+class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  ConsumerState<AuthScreen> createState() => _AuthScreenState();
+
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends ConsumerState<AuthScreen> {
   bool isLogin = true;
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers pour récupérer le texte
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _usernameController = TextEditingController();
@@ -20,9 +23,41 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() => isLogin = !isLogin);
   }
 
-  void _submit() {
+  void _submit() async {
     if (_formKey.currentState!.validate()) {
-      print("Tentative de ${isLogin ? 'Connexion' : 'Inscription'}");
+      final authNotifier = ref.read(authProvider);
+
+      String? error;
+
+      if (isLogin) {
+        error = await authNotifier.handleLogin(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
+        );
+      } else {
+        error = await authNotifier.handleSignUp(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
+          _usernameController.text.trim(),
+        );
+      }
+
+      if (error != null && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Erreur : $error"),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Succès !"), backgroundColor: Colors.green),
+        );
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+        );
+        // Ici, tu pourras ajouter la navigation vers ta page d'accueil
+      }
     }
   }
 
