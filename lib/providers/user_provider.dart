@@ -1,4 +1,4 @@
-import '/model/user.dart';
+/*import '/model/user_model.dart';
 import '/repository/user_repository.dart';
 import '/services/userDataSourceStatic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,4 +26,4 @@ final allUsersProvider = FutureProvider<List<User>>((ref) async {
 final userDetailProvider = FutureProvider.family<User, String>((ref, id) async {
   final repo = ref.watch(userRepositoryProvider);
   return repo.getUser(id);
-});
+});*/

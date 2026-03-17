@@ -1,6 +1,6 @@
-import '/model/user.dart';
-import '/services/userDataSource.dart';
-
+import '/model/user_model.dart';
+import '/services/auth_service.dart';
+/*
 class UserRepository {
   final UserDataSource dataSource;
   UserRepository(this.dataSource);
@@ -18,4 +18,4 @@ class UserRepository {
 
     return users;
   }
-}
+}*/
