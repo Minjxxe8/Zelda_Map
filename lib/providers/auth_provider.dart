@@ -39,7 +39,7 @@ class AuthProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      final res = await _authRepo.login(email, password);
+      final res = await _authRepo.signUp(email, password, username);
 
       _user = UserModel(
         id: res.user!.id,
