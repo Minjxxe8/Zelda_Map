@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import '../model/user_model.dart';
 import '../repository/auth_repository.dart';
+import '../utils/error_handler.dart';
 
 class AuthProvider extends ChangeNotifier {
   final _authRepo = AuthRepository();
@@ -24,7 +25,7 @@ class AuthProvider extends ChangeNotifier {
       );
       return null;
     } catch (e) {
-      return e.toString();
+      return translateAuthError(e.toString());
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -48,7 +49,7 @@ class AuthProvider extends ChangeNotifier {
       );
       return null;
     } catch (e) {
-      return e.toString();
+      return translateAuthError(e.toString());
     } finally {
       _isLoading = false;
       notifyListeners();

@@ -14,6 +14,7 @@ class AuthScreen extends ConsumerStatefulWidget {
 class _AuthScreenState extends ConsumerState<AuthScreen> {
   bool isLogin = true;
   final _formKey = GlobalKey<FormState>();
+  String? _errorMessage;
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -24,6 +25,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   void _submit() async {
+    setState(() => _errorMessage = null);
+
     if (_formKey.currentState!.validate()) {
       final authNotifier = ref.read(authProvider);
 
@@ -49,14 +52,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             backgroundColor: Colors.redAccent,
           ),
         );
+      }
+      if (error != null && mounted) {
+        setState(() => _errorMessage = error);
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Succès !"), backgroundColor: Colors.green),
+          const SnackBar(content: Text("Bienvenue !"), backgroundColor: Colors.green),
         );
+
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const ProfileScreen()),
         );
-        // Ici, tu pourras ajouter la navigation vers ta page d'accueil
       }
     }
   }
@@ -72,6 +78,32 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+
+                if (_errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.redAccent),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.error_outline, color: Colors.redAccent),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                                _errorMessage!,
+                                style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
                 Text(isLogin ? "Connexion" : "Créer un compte",
                     style: Theme.of(context).textTheme.headlineMedium),
                 const SizedBox(height: 20),
