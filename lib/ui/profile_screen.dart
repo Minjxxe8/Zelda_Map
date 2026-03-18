@@ -39,9 +39,47 @@ class ProfileScreen extends ConsumerWidget {
               },
               child: const Text("Déconnexion"),
             ),
+
+            TextButton(
+              onPressed: () => _showDeleteDialog(context, ref),
+              child: const Text("Supprimer définitivement mon compte",
+                  style: TextStyle(color: Colors.red, fontSize: 12)),
+            ),
           ],
         ),
       ),
     );
   }
+}
+
+
+void _showDeleteDialog(BuildContext context, WidgetRef ref) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Supprimer le compte ?"),
+      content: const Text("Cette action est irréversible. Toutes vos photos seront supprimées."),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("Annuler"),
+        ),
+        TextButton(
+          onPressed: () async {
+            final error = await ref.read(authProvider).handleDeleteAccount();
+            if (context.mounted) {
+              if (error == null) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const AuthScreen()),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+              }
+            }
+          },
+          child: const Text("Supprimer", style: TextStyle(color: Colors.red)),
+        ),
+      ],
+    ),
+  );
 }

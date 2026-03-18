@@ -60,7 +60,25 @@ class AuthProvider extends ChangeNotifier {
     _user = null;
     notifyListeners();
   }
+
+  Future<String?> handleDeleteAccount() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      await _authRepo.deleteAccount();
+      _user = null;
+      return null;
+    } catch (e) {
+      return e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
 }
+
+
 
 final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider();

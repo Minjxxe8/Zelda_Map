@@ -21,4 +21,13 @@ class AuthRepository {
   Future<void> signOut() async {
     await _supabase.auth.signOut();
   }
+
+  Future<void> deleteAccount() async {
+    final userId = _supabase.auth.currentUser?.id;
+
+    if (userId != null) {
+      await _supabase.from('profiles').delete().eq('id', userId);
+      await _supabase.auth.signOut();
+    }
+  }
 }
