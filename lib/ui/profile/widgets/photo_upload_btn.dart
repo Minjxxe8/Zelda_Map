@@ -24,7 +24,7 @@ class PhotoUploadButton extends ConsumerWidget {
         backgroundColor: Colors.blueAccent,
         foregroundColor: Colors.white,
       ),
-      onPressed: () => ref.read(photoProvider).takeAndUploadPhoto(userId),
+      onPressed: () => ref.read(photoProvider).takeAndUploadPhoto(userId, context),
     );
   }
 }

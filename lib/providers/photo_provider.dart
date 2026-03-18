@@ -16,18 +16,19 @@ class PhotoProvider extends ChangeNotifier {
   bool _isUploading = false;
   bool get isUploading => _isUploading;
 
-  Future<void> takeAndUploadPhoto(String userId) async {
+  Future<void> takeAndUploadPhoto(String userId, BuildContext context) async {
     final picker = ImagePicker();
     final XFile? pickedFile = await picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
-      print("hoto prise ! Chemin : ${pickedFile.path}");
+      String? caption = await _showCaptionDialog(context);
+
       _isUploading = true;
       notifyListeners();
       try {
         final url = await _storage.uploadPhoto(File(pickedFile.path), userId);
 
-        await _repo.savePhotoData(userId, url);
+        await _repo.savePhotoData(userId, url, caption ?? "Ma nouvelle photo !");
         ref.invalidate(userPhotosProvider(userId));
 
       } catch (e) {
@@ -40,6 +41,25 @@ class PhotoProvider extends ChangeNotifier {
       print("Aucune photo sélectionnée.");
     }
   }
+}
+
+Future<String?> _showCaptionDialog(BuildContext context) {
+  TextEditingController controller = TextEditingController();
+  return showDialog<String>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Ajouter une légende"),
+      content: TextField(
+        controller: controller,
+        decoration: const InputDecoration(hintText: "C'était un super moment..."),
+        autofocus: true,
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text("Passer")),
+        ElevatedButton(onPressed: () => Navigator.pop(context, controller.text), child: const Text("Valider")),
+      ],
+    ),
+  );
 }
 
 

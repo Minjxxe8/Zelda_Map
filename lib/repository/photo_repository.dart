@@ -3,11 +3,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class PhotoRepository {
   final _supabase = Supabase.instance.client;
 
-  Future<void> savePhotoData(String userId, String imageUrl) async {
+  Future<void> savePhotoData(String userId, String imageUrl, String caption) async {
     await _supabase.from('photos').insert({
       'user_id': userId,
       'image_url': imageUrl,
-      'caption': 'Ma nouvelle photo !',
+      'caption': caption,
       'mode': 'classic',
     });
   }
@@ -21,4 +21,12 @@ class PhotoRepository {
 
     return List<Map<String, dynamic>>.from(response);
   }
+
+  Future<void> updatePhotoCaption(String photoId, String newCaption) async {
+    await _supabase
+        .from('photos')
+        .update({'caption': newCaption})
+        .eq('id', photoId);
+  }
+
 }

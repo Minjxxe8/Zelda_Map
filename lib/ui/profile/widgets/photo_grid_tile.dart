@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../photo_details_screen.dart';
+import 'photo_details_screen.dart';
 
 class PhotoGridTile extends StatelessWidget {
   final Map<String, dynamic> photo;
