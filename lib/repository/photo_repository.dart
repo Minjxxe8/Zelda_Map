@@ -12,13 +12,13 @@ class PhotoRepository {
     });
   }
 
-  Future<List<String>> getUserPhotoUrls(String userId) async {
+  Future<List<Map<String, dynamic>>> getUserPhotos(String userId) async {
     final response = await _supabase
         .from('photos')
-        .select('image_url')
+        .select()
         .eq('user_id', userId)
         .order('created_at', ascending: false);
 
-    return (response as List).map((item) => item['image_url'] as String).toList();
+    return List<Map<String, dynamic>>.from(response);
   }
 }

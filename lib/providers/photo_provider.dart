@@ -21,7 +21,7 @@ class PhotoProvider extends ChangeNotifier {
     final XFile? pickedFile = await picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
-      print("📸 Photo prise ! Chemin : ${pickedFile.path}");
+      print("hoto prise ! Chemin : ${pickedFile.path}");
       _isUploading = true;
       notifyListeners();
       try {
@@ -37,15 +37,15 @@ class PhotoProvider extends ChangeNotifier {
         notifyListeners();
       }
     } else {
-      print("🚫 Aucune photo sélectionnée.");
+      print("Aucune photo sélectionnée.");
     }
   }
 }
 
 
-final userPhotosProvider = FutureProvider.family<List<String>, String>((ref, userId) async {
+final userPhotosProvider = FutureProvider.family<List<Map<String, dynamic>>, String>((ref, userId) async {
   final repo = PhotoRepository();
-  return await repo.getUserPhotoUrls(userId);
+  return await repo.getUserPhotos(userId);
 });
 
 final photoProvider = ChangeNotifierProvider((ref) => PhotoProvider(ref));
