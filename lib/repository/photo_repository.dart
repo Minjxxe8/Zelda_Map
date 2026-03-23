@@ -1,3 +1,4 @@
+import '../model/daily_post.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PhotoRepository {
@@ -29,4 +30,100 @@ class PhotoRepository {
         .eq('id', photoId);
   }
 
+  Future<List<DailyPost>> getTodaysPosts({String? currentUserId}) async {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    final startOfNextDay = startOfDay.add(const Duration(days: 1));
+
+    final photosResponse = await _supabase
+        .from('photos')
+        .select('id, user_id, image_url, caption, created_at')
+        .gte('created_at', startOfDay.toUtc().toIso8601String())
+        .lt('created_at', startOfNextDay.toUtc().toIso8601String())
+        .order('created_at', ascending: false);
+
+    final photos = List<Map<String, dynamic>>.from(photosResponse);
+    if (photos.isEmpty) {
+      return const [];
+    }
+
+    final userIds = photos
+        .map((photo) => photo['user_id'] as String?)
+        .whereType<String>()
+        .toSet()
+        .toList();
+    final photoIds = photos
+        .map((photo) => photo['id'] as String?)
+        .whereType<String>()
+        .toList();
+
+    final profilesResponse = await _supabase
+        .from('profiles')
+        .select('id, username')
+        .inFilter('id', userIds);
+
+    final profiles = {
+      for (final profile in List<Map<String, dynamic>>.from(profilesResponse))
+        profile['id'] as String: (profile['username'] ?? 'Inconnu') as String,
+    };
+
+    /* final likesResponse = await _supabase
+        .from('photo_likes')
+        .select('photo_id, user_id')
+        .inFilter('photo_id', photoIds);
+
+    final likes = List<Map<String, dynamic>>.from(likesResponse);
+    final likesPerPhoto = <String, int>{};
+    final likedByCurrentUser = <String>{};
+
+    for (final like in likes) {
+      final photoId = like['photo_id'] as String?;
+      final userId = like['user_id'] as String?;
+      if (photoId == null) {
+        continue;
+      }
+      likesPerPhoto[photoId] = (likesPerPhoto[photoId] ?? 0) + 1;
+      if (currentUserId != null && userId == currentUserId) {
+        likedByCurrentUser.add(photoId);
+      }
+    } */
+
+    return photos.map((photo) {
+      final photoId = photo['id'] as String;
+      final ownerId = photo['user_id'] as String;
+      return DailyPost(
+        id: photoId,
+        userId: ownerId,
+        username: profiles[ownerId] ?? 'Inconnu',
+        imageUrl: photo['image_url'] as String,
+        caption: photo['caption'] as String?,
+        postedAt: DateTime.parse(photo['created_at'] as String).toLocal(),
+        // likesCount: likesPerPhoto[photoId] ?? 0,
+        // isLikedByCurrentUser: likedByCurrentUser.contains(photoId),
+      );
+    }).toList();
+  }
+
+  Future<void> togglePhotoLike(String photoId, String userId) async {
+    final existingLike = await _supabase
+        .from('photo_likes')
+        .select('photo_id')
+        .eq('photo_id', photoId)
+        .eq('user_id', userId)
+        .maybeSingle();
+
+    if (existingLike != null) {
+      await _supabase
+          .from('photo_likes')
+          .delete()
+          .eq('photo_id', photoId)
+          .eq('user_id', userId);
+      return;
+    }
+
+    await _supabase.from('photo_likes').insert({
+      'photo_id': photoId,
+      'user_id': userId,
+    });
+  }
 }
