@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'feed/feed_screen.dart';
-import 'photo_capture_screen.dart';
+import 'photos/photo_capture_screen.dart';
 import 'profile/profile_screen.dart';
 
 class AppShell extends StatefulWidget {
