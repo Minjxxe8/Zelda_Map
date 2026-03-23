@@ -134,7 +134,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         ),
                       ),
                     Text(
-                      isLogin ? "Connexion" : "CrÃ©er un compte",
+                      isLogin ? "Connexion" : "Créer un compte",
                       style: (Theme.of(context).textTheme.headlineMedium ??
                               const TextStyle())
                           .copyWith(fontSize: isTablet ? 34 : null),
@@ -176,7 +176,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       child: Text(
                         isLogin
                             ? "Pas de compte ? Inscris-toi"
-                            : "DÃ©jÃ  un compte ? Connecte-toi",
+                            : "Déjà un compte ? Connecte-toi",
                       ),
                     ),
                   ],

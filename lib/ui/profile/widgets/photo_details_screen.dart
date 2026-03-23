@@ -62,7 +62,7 @@ class _PhotoDetailScreenState extends ConsumerState<PhotoDetailScreen> {
       appBar: const AppPageAppBar(
         title: 'Photo',
         backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
@@ -87,11 +87,17 @@ class _PhotoDetailScreenState extends ConsumerState<PhotoDetailScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Prise à $timeStr",
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18)),
-                    Text(dateStr,
-                        style: const TextStyle(color: Colors.grey)),
+                    Text(
+                      "Prise à $timeStr",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Text(
+                      dateStr,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -103,9 +109,10 @@ class _PhotoDetailScreenState extends ConsumerState<PhotoDetailScreen> {
                         child: Text(
                           currentCaption,
                           style: const TextStyle(
-                              fontSize: 16,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.blueAccent),
+                            fontSize: 16,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.blueAccent,
+                          ),
                         ),
                       ),
                       const Icon(Icons.edit, size: 16, color: Colors.blueAccent),
