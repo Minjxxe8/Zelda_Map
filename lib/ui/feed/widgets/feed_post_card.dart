@@ -116,9 +116,7 @@ class FeedPostCard extends ConsumerWidget {
                                 post.isLikedByCurrentUser
                                     ? Icons.favorite
                                     : Icons.favorite_border,
-                                color: post.isLikedByCurrentUser
-                                    ? Colors.redAccent
-                                    : Colors.black87,
+                                color: Colors.white,
                               ),
                             const SizedBox(width: 6),
                             Text(
