@@ -9,6 +9,7 @@ Application Flutter connectée à Supabase pour partager une photo par jour, con
 - Like sur les photos
 - Capture et upload de photo avec `image_picker`
 - Profil personnel et profils publics
+- Possibilité de poster une photo par jour dans un groupe
 - Interface responsive :
   - mobile : liste verticale sur l'accueil
   - tablette : grille sur l'accueil
@@ -67,6 +68,7 @@ lib/
 ├─ ui/
 │  ├─ authentification/
 │  ├─ feed/
+│  ├─ groups/
 │  ├─ photos/
 │  ├─ profile/
 │  └─ widgets/
@@ -82,12 +84,15 @@ lib/
 - [`app_shell.dart`](C:\Users\elisa\Desktop\Dev mobile - 23 mars\Zelda_Map\lib\ui\app_shell.dart)
   - navigation principale :
     - accueil
+    - groupes
     - prendre une photo
     - profil
 - [`feed_screen.dart`](C:\Users\elisa\Desktop\Dev mobile - 23 mars\Zelda_Map\lib\ui\feed\feed_screen.dart)
   - affiche les photos publiées aujourd'hui
+- [`group_screen.dart`](C:\Users\elisa\Desktop\Dev mobile - 23 mars\Zelda_Map\lib\ui\groups\group_screen.dart)
+  - affiche les pgroupes que l'on as rejoint, et et les groupes disponibles
 - [`photo_capture_screen.dart`](C:\Users\elisa\Desktop\Dev mobile - 23 mars\Zelda_Map\lib\ui\photos\photo_capture_screen.dart)
-  - ouvre la caméra et envoie la photo
+  - ouvre la caméra et envoie la photo, avec une légende personnalisée et un mode (public ou groupe)
 - [`profile_screen.dart`](C:\Users\elisa\Desktop\Dev mobile - 23 mars\Zelda_Map\lib\ui\profile\profile_screen.dart)
   - affiche le profil connecté
 
@@ -131,4 +136,6 @@ flutter test
 
 ## Auteurs
 
-Projet Flutter par Elisabeth ROBL et Léna RICARD pour l'application Les Copines.
+<a href="https://github.com/elirbl"><img src="https://avatars.githubusercontent.com/u/186811170?v=4" alt="Elisabeth Robl" width="69" height="69"/></a>
+<a href="https://github.com/Minjxxe8"><img src="https://avatars.githubusercontent.com/u/137718998?v=4" alt="Ricard Léna" width="69" height="69"/></a>
+
