@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show FutureProvider, Ref;
+import 'package:flutter_riverpod/legacy.dart' show ChangeNotifierProvider;
 import 'package:image_picker/image_picker.dart';
+import 'auth_provider.dart';
+import '../model/daily_post.dart';
 import '../repository/photo_repository.dart';
 import '../services/storage_service.dart';
 
@@ -15,6 +17,9 @@ class PhotoProvider extends ChangeNotifier {
 
   bool _isUploading = false;
   bool get isUploading => _isUploading;
+  final Set<String> _likeInProgress = {};
+
+  bool isLiking(String photoId) => _likeInProgress.contains(photoId);
 
   Future<void> takeAndUploadPhoto(String userId, BuildContext context) async {
     final picker = ImagePicker();
@@ -31,6 +36,7 @@ class PhotoProvider extends ChangeNotifier {
 
         await _repo.savePhotoData(userId, url, caption ?? "Ma nouvelle photo !");
         ref.invalidate(userPhotosProvider(userId));
+        ref.invalidate(dailyFeedProvider);
 
       } catch (e) {
         print("ERREUR : $e");
@@ -40,6 +46,22 @@ class PhotoProvider extends ChangeNotifier {
       }
     } else {
       print("Aucune photo sélectionnée.");
+    }
+  }
+
+  Future<void> toggleLike(String photoId, String userId) async {
+    if (_likeInProgress.contains(photoId)) {
+      return;
+    }
+
+    _likeInProgress.add(photoId);
+    notifyListeners();
+    try {
+      await _repo.togglePhotoLike(photoId, userId);
+      ref.invalidate(dailyFeedProvider);
+    } finally {
+      _likeInProgress.remove(photoId);
+      notifyListeners();
     }
   }
 }
@@ -63,10 +85,23 @@ Future<String?> _showCaptionDialog(BuildContext context) {
   );
 }
 
+final dailyFeedProvider = FutureProvider<List<DailyPost>>((ref) async {
+  final repo = PhotoRepository();
+  final currentUserId = ref.watch(authProvider).user?.id;
+  return repo.getTodaysPosts(currentUserId: currentUserId);
+});
 
 final userPhotosProvider = FutureProvider.family<List<Map<String, dynamic>>, String>((ref, userId) async {
   final repo = PhotoRepository();
   return await repo.getUserPhotos(userId);
+});
+
+final userLikesGivenCountProvider = FutureProvider.family<int, String>((
+  ref,
+  userId,
+) async {
+  final repo = PhotoRepository();
+  return repo.getLikesGivenCount(userId);
 });
 
 final photoProvider = ChangeNotifierProvider((ref) => PhotoProvider(ref));

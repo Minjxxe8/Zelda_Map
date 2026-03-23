@@ -5,7 +5,13 @@ import 'photo_grid_tile.dart';
 
 class PhotoGrid extends ConsumerWidget {
   final String userId;
-  const PhotoGrid({super.key, required this.userId});
+  final String title;
+
+  const PhotoGrid({
+    super.key,
+    required this.userId,
+    this.title = "Mes Photos",
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -14,8 +20,8 @@ class PhotoGrid extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Mes Photos",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 15),
         photosAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
@@ -24,7 +30,7 @@ class PhotoGrid extends ConsumerWidget {
             if (photos.isEmpty) {
               return const Padding(
                 padding: EdgeInsets.only(top: 20),
-                child: Text("Aucune photo pour le moment 📸"),
+                child: Text("Aucune photo pour le moment"),
 
               );
             }
