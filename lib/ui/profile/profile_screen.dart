@@ -9,17 +9,17 @@ import '../../../providers/auth_provider.dart';
 import '../../../providers/photo_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
-  const ProfileScreen({super.key});
+  final bool embedded;
+
+  const ProfileScreen({super.key, this.embedded = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).user;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text("Mon Profil"), centerTitle: true),
-      body: user == null
-          ? const Center(child: Text("Aucune session active"))
-          : RefreshIndicator(
+    final body = user == null
+        ? const Center(child: Text("Aucune session active"))
+        : RefreshIndicator(
         onRefresh: () => ref.refresh(userPhotosProvider(user.id).future),
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -38,7 +38,15 @@ class ProfileScreen extends ConsumerWidget {
             ],
           ),
         ),
-      ),
+      );
+
+    if (embedded) {
+      return body;
+    }
+
+    return Scaffold(
+      appBar: AppBar(title: const Text("Mon Profil"), centerTitle: true),
+      body: body,
     );
   }
 }
