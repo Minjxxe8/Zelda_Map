@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/photo_provider.dart';
+import '../feed/widgets/app_colors.dart';
 
 class PhotoCaptureScreen extends ConsumerWidget {
   const PhotoCaptureScreen({super.key});
@@ -45,6 +46,8 @@ class PhotoCaptureScreen extends ConsumerWidget {
               ),
             ),
             style: FilledButton.styleFrom(
+              backgroundColor: kAccent,
+              foregroundColor: kAccentDark,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(32),
               ),
