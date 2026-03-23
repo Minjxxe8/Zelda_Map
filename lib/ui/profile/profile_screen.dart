@@ -5,6 +5,7 @@ import 'package:zelda_map/ui/profile/widgets/logout_btn.dart';
 import 'package:zelda_map/ui/profile/widgets/photo_grid.dart';
 import 'package:zelda_map/ui/profile/widgets/photo_upload_btn.dart';
 import 'package:zelda_map/ui/profile/widgets/profile_header.dart';
+import 'package:zelda_map/ui/widgets/app_page_app_bar.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/photo_provider.dart';
 
@@ -29,8 +30,8 @@ class ProfileScreen extends ConsumerWidget {
               ProfileHeader(user: user),
               const SizedBox(height: 30),
               const Divider(),
-              PhotoUploadButton(userId: user.id),
-              const SizedBox(height: 30),
+              //PhotoUploadButton(userId: user.id),
+              // const SizedBox(height: 30),
               PhotoGrid(userId: user.id),
               const SizedBox(height: 50),
               const LogoutButton(),
@@ -45,7 +46,7 @@ class ProfileScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Mon Profil"), centerTitle: true),
+      appBar: const AppPageAppBar(title: 'Profil'),
       body: body,
     );
   }

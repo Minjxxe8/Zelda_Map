@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'feed/feed_screen.dart';
 import 'photos/photo_capture_screen.dart';
 import 'profile/profile_screen.dart';
+import 'widgets/app_page_app_bar.dart';
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -46,10 +47,7 @@ class _AppShellState extends State<AppShell> {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_titles[_currentIndex]),
-        centerTitle: true,
-      ),
+      appBar: AppPageAppBar(title: _titles[_currentIndex]),
       body: IndexedStack(
         index: _currentIndex,
         children: pages,

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zelda_map/services/supabase_service.dart';
 import 'package:zelda_map/ui/auth_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:zelda_map/ui/widgets/app_page_app_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +59,7 @@ class _AppBootstrapScreenState extends State<AppBootstrapScreen> {
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const Scaffold(
+            appBar: AppPageAppBar(title: 'Chargement'),
             body: Center(
               child: CircularProgressIndicator(),
             ),
@@ -66,6 +68,7 @@ class _AppBootstrapScreenState extends State<AppBootstrapScreen> {
 
         if (snapshot.hasError) {
           return Scaffold(
+            appBar: const AppPageAppBar(title: 'Erreur'),
             body: Center(
               child: Padding(
                 padding: const EdgeInsets.all(24),
