@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/auth_provider.dart';
-import 'app_shell.dart';
-import 'widgets/app_page_app_bar.dart';
+import '../../providers/auth_provider.dart';
+import '../feed/widgets/app_colors.dart';
+import '../app_shell.dart';
+import 'widgets/primary_button.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -70,16 +71,25 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(authProvider).isLoading;
+
     return Scaffold(
-      appBar: AppPageAppBar(title: isLogin ? 'Connexion' : 'Creer un compte'),
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Center(
+                  child: Image.asset(
+                    'lib/images/Logo-LesCopines.png',
+                    height: 180,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                const SizedBox(height: 8),
 
                 if (_errorMessage != null)
                   Padding(
@@ -132,12 +142,16 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 ),
 
                 const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: _submit,
-                  child: Text(isLogin ? "Se connecter" : "S'inscrire"),
+                PrimaryButton(
+                  label: isLogin ? "Se connecter" : "S'inscrire",
+                  onTap: _submit,
+                  isLoading: isLoading,
                 ),
 
                 TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: kAccent,
+                  ),
                   onPressed: _toggleMode,
                   child: Text(isLogin
                       ? "Pas de compte ? Inscris-toi"

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zelda_map/services/supabase_service.dart';
-import 'package:zelda_map/ui/auth_screen.dart';
+import 'package:zelda_map/ui/authentification/auth_screen.dart';
+import 'package:zelda_map/ui/feed/widgets/app_colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:zelda_map/ui/widgets/app_page_app_bar.dart';
 
@@ -21,9 +22,50 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: kBackground,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          brightness: Brightness.dark,
+          background: kBackground,
+          surface: kBackground,
+          onBackground: kTextPrimary,
+          onSurface: kTextPrimary,
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: kBackground,
+          foregroundColor: kTextPrimary,
+          surfaceTintColor: Colors.transparent,
+          titleTextStyle: TextStyle(
+            color: kTextPrimary,
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        textTheme: const TextTheme(
+          headlineSmall: TextStyle(
+            color: kTextPrimary,
+            fontSize: 28,
+            fontWeight: FontWeight.w700,
+          ),
+          titleLarge: TextStyle(
+            color: kTextPrimary,
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+          ),
+          bodyLarge: TextStyle(
+            color: kTextPrimary,
+            fontSize: 16,
+          ),
+          bodyMedium: TextStyle(
+            color: kTextPrimary,
+            fontSize: 14,
+          ),
+        ),
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(),
           filled: true,
+          fillColor: kSurface,
+          labelStyle: TextStyle(color: kTextSecondary),
         ),
       ),
       home: const AppBootstrapScreen(),

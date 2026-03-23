@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../feed/widgets/app_colors.dart';
 
 class AppPageAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -22,14 +23,21 @@ class AppPageAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: backgroundColor,
-      foregroundColor: foregroundColor,
-      iconTheme: iconTheme,
+      backgroundColor: backgroundColor ?? kBackground,
+      foregroundColor: foregroundColor ?? kTextPrimary,
+      iconTheme: iconTheme ?? const IconThemeData(color: kTextPrimary),
       titleSpacing: 16,
       centerTitle: centerTitle,
       title: Align(
         alignment: Alignment.centerLeft,
-        child: Text(title),
+        child: Text(
+          title,
+          style: const TextStyle(
+            color: kTextPrimary,
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
       actions: const [
         Padding(
