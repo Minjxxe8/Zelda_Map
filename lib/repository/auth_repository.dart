@@ -30,4 +30,12 @@ class AuthRepository {
       await _supabase.auth.signOut();
     }
   }
+
+  Future<Map<String, dynamic>?> getProfileById(String userId) async {
+    return await _supabase
+        .from('profiles')
+        .select('id, username, email')
+        .eq('id', userId)
+        .maybeSingle();
+  }
 }

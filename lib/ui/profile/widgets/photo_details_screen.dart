@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../providers/photo_provider.dart';
 import '../../../repository/photo_repository.dart';
+import '../../widgets/app_page_app_bar.dart';
 
 class PhotoDetailScreen extends ConsumerStatefulWidget {
   final Map<String, dynamic> photo;
@@ -58,9 +59,9 @@ class _PhotoDetailScreenState extends ConsumerState<PhotoDetailScreen> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
+      appBar: const AppPageAppBar(
+        title: 'Photo',
         backgroundColor: Colors.transparent,
-        elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(

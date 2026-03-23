@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
 import 'app_shell.dart';
+import 'widgets/app_page_app_bar.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -70,6 +71,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppPageAppBar(title: isLogin ? 'Connexion' : 'Creer un compte'),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),

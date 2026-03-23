@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/photo_provider.dart';
 import '../../model/daily_post.dart';
+import '../profile/public_profile_screen.dart';
 
 class FeedScreen extends ConsumerWidget {
   const FeedScreen({super.key});
@@ -88,10 +89,6 @@ class _DailyPostCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(authProvider).user;
-    final photoNotifier = ref.watch(photoProvider);
-    // final isLiking = photoNotifier.isLiking(post.id);
-
     return Card(
       clipBehavior: Clip.antiAlias,
       elevation: 0,
@@ -121,31 +118,50 @@ class _DailyPostCard extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Colors.blue.shade100,
-                      child: Text(
-                        post.username.isEmpty
-                            ? '?'
-                            : post.username.substring(0, 1).toUpperCase(),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(24),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => PublicProfileScreen(
+                            userId: post.userId,
+                            username: post.username,
+                          ),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 18,
+                              backgroundColor: Colors.blue.shade100,
+                              child: Text(
+                                post.username.isEmpty
+                                    ? '?'
+                                    : post.username.substring(0, 1).toUpperCase(),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  post.username,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  DateFormat('HH:mm').format(post.postedAt),
+                                  style: TextStyle(color: Colors.grey.shade600),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            post.username,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            DateFormat('HH:mm').format(post.postedAt),
-                            style: TextStyle(color: Colors.grey.shade600),
-                          ),
-                        ],
-                      ),
-                    ),
+                    const Spacer(),
                     /* IconButton(
                       onPressed: user == null || isLiking
                           ? null
