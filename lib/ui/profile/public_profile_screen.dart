@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/photo_provider.dart';
 import '../../repository/auth_repository.dart';
 import '../widgets/app_page_app_bar.dart';
-import 'widgets/photo_grid.dart';
+import 'widgets/profile_showcase.dart';
 
 final publicProfileProvider =
     FutureProvider.family<Map<String, dynamic>?, String>((ref, userId) async {
@@ -23,6 +23,8 @@ class PublicProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(publicProfileProvider(userId));
+    final photosAsync = ref.watch(userPhotosProvider(userId));
+    final likesGivenAsync = ref.watch(userLikesGivenCountProvider(userId));
 
     return Scaffold(
       appBar: AppPageAppBar(title: username),
@@ -30,65 +32,27 @@ class PublicProfileScreen extends ConsumerWidget {
         onRefresh: () async {
           ref.invalidate(publicProfileProvider(userId));
           ref.invalidate(userPhotosProvider(userId));
+          ref.invalidate(userLikesGivenCountProvider(userId));
           await ref.read(publicProfileProvider(userId).future);
         },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              profileAsync.when(
-                loading: () => const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 24),
-                  child: CircularProgressIndicator(),
-                ),
-                error: (error, _) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 24),
-                  child: Text('Erreur : $error'),
-                ),
-                data: (profile) {
-                  final displayName = (profile?['username'] ?? username) as String;
-                  final email = profile?['email'] as String?;
-
-                  return Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: Colors.blueAccent,
-                        child: Text(
-                          displayName.isEmpty
-                              ? '?'
-                              : displayName.substring(0, 1).toUpperCase(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        displayName,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      if (email != null && email.isNotEmpty)
-                        Text(
-                          email,
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                    ],
-                  );
-                },
+        child: profileAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, _) => Center(child: Text('Erreur : $error')),
+          data: (profile) => photosAsync.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, _) => Center(child: Text('Erreur : $error')),
+            data: (photos) => likesGivenAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, _) => Center(child: Text('Erreur : $error')),
+              data: (likesGiven) => ProfileShowcase(
+                username: (profile?['username'] ?? username) as String,
+                email: profile?['email'] as String?,
+                photos: photos,
+                isOwnProfile: false,
+                likesGiven: likesGiven,
+                primaryActionLabel: 'Suivre',
               ),
-              const SizedBox(height: 30),
-              PhotoGrid(
-                userId: userId,
-                title: 'Photos de cet utilisateur',
-              ),
-            ],
+            ),
           ),
         ),
       ),

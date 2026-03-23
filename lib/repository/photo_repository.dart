@@ -20,7 +20,46 @@ class PhotoRepository {
         .eq('user_id', userId)
         .order('created_at', ascending: false);
 
-    return List<Map<String, dynamic>>.from(response);
+    final photos = List<Map<String, dynamic>>.from(response);
+    if (photos.isEmpty) {
+      return photos;
+    }
+
+    final photoIds = photos
+        .map((photo) => photo['id'] as String?)
+        .whereType<String>()
+        .toList();
+
+    final likesResponse = await _supabase
+        .from('photo_likes')
+        .select('photo')
+        .inFilter('photo', photoIds);
+
+    final likesPerPhoto = <String, int>{};
+    for (final like in List<Map<String, dynamic>>.from(likesResponse)) {
+      final photoId = like['photo'] as String?;
+      if (photoId == null) {
+        continue;
+      }
+      likesPerPhoto[photoId] = (likesPerPhoto[photoId] ?? 0) + 1;
+    }
+
+    return photos.map((photo) {
+      final photoId = photo['id'] as String?;
+      return {
+        ...photo,
+        'likes_count': photoId == null ? 0 : (likesPerPhoto[photoId] ?? 0),
+      };
+    }).toList();
+  }
+
+  Future<int> getLikesGivenCount(String userId) async {
+    final response = await _supabase
+        .from('photo_likes')
+        .select('id')
+        .eq('user', userId);
+
+    return List<Map<String, dynamic>>.from(response).length;
   }
 
   Future<void> updatePhotoCaption(String photoId, String newCaption) async {

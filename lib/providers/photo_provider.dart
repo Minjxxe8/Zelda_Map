@@ -95,4 +95,12 @@ final userPhotosProvider = FutureProvider.family<List<Map<String, dynamic>>, Str
   return await repo.getUserPhotos(userId);
 });
 
+final userLikesGivenCountProvider = FutureProvider.family<int, String>((
+  ref,
+  userId,
+) async {
+  final repo = PhotoRepository();
+  return repo.getLikesGivenCount(userId);
+});
+
 final photoProvider = ChangeNotifierProvider((ref) => PhotoProvider(ref));
