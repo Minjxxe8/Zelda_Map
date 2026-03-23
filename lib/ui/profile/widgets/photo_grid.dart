@@ -30,7 +30,7 @@ class PhotoGrid extends ConsumerWidget {
             if (photos.isEmpty) {
               return const Padding(
                 padding: EdgeInsets.only(top: 20),
-                child: Text("Aucune photo pour le moment 📸"),
+                child: Text("Aucune photo pour le moment"),
 
               );
             }
