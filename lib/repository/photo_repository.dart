@@ -4,11 +4,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class PhotoRepository {
   final _supabase = Supabase.instance.client;
 
-  Future<void> savePhotoData(String userId, String imageUrl, String caption) async {
+  Future<void> savePhotoData(String userId, String imageUrl, String caption, String groupId) async {
     await _supabase.from('photos').insert({
       'user_id': userId,
       'image_url': imageUrl,
       'caption': caption,
+      'group_id': groupId,
       'mode': 'classic',
     });
   }

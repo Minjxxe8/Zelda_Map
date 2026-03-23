@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show FutureProvider, Ref;
 import 'package:flutter_riverpod/legacy.dart' show ChangeNotifierProvider;
 import 'package:image_picker/image_picker.dart';
+import '../repository/group_repository.dart';
 import 'auth_provider.dart';
 import '../model/daily_post.dart';
 import '../repository/photo_repository.dart';
@@ -28,12 +29,17 @@ class PhotoProvider extends ChangeNotifier {
     if (pickedFile != null) {
       String? caption = await _showCaptionDialog(context);
 
+      final repoGroup = GroupRepository();
+      final availableGroups = await repoGroup.getAvailableGroupsForToday(userId);
+
+      String? selectedGroupId = await _showDestinationDialog(context, availableGroups);
+
       _isUploading = true;
       notifyListeners();
       try {
         final url = await _storage.uploadPhoto(File(pickedFile.path), userId);
 
-        await _repo.savePhotoData(userId, url, caption ?? "Ma nouvelle photo !");
+        await _repo.savePhotoData(userId, url, caption ?? "Ma nouvelle photo !", selectedGroupId ?? "");
         ref.invalidate(userPhotosProvider(userId));
         ref.invalidate(dailyFeedProvider);
       } catch (e) {
@@ -79,6 +85,40 @@ Future<String?> _showCaptionDialog(BuildContext context) {
         TextButton(onPressed: () => Navigator.pop(context), child: const Text("Passer")),
         ElevatedButton(onPressed: () => Navigator.pop(context, controller.text), child: const Text("Valider")),
       ],
+    ),
+  );
+}
+
+Future<String?> _showDestinationDialog(BuildContext context, List<Map<String, dynamic>> groups) {
+  return showDialog<String>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Où publier ?"),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text("Uniquement sur mon profil"),
+              onTap: () => Navigator.pop(context, null),
+            ),
+            const Divider(),
+            if (groups.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text("Aucun groupe disponible pour aujourd'hui (limite atteinte).",
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+              ),
+            ...groups.map((group) => ListTile(
+              leading: const Icon(Icons.group),
+              title: Text(group['name']),
+              onTap: () => Navigator.pop(context, group['id']),
+            )),
+          ],
+        ),
+      ),
     ),
   );
 }
