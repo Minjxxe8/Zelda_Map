@@ -26,6 +26,7 @@ class PhotoProvider extends ChangeNotifier {
       _isUploading = true;
       notifyListeners();
       try {
+        String locationSuffix = "";
         final url = await _storage.uploadPhoto(File(pickedFile.path), userId);
 
         await _repo.savePhotoData(userId, url, caption ?? "Ma nouvelle photo !");
