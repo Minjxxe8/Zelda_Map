@@ -4,6 +4,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/photo_provider.dart';
 import '../feed/widgets/app_colors.dart';
 
+
 class PhotoCaptureScreen extends ConsumerWidget {
   const PhotoCaptureScreen({super.key});
 

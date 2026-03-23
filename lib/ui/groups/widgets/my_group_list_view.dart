@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/group-provider.dart';
+import 'group_feed_screen.dart';
 
 class MyGroupsList extends ConsumerWidget {
   const MyGroupsList({super.key});
@@ -29,7 +30,12 @@ class MyGroupsList extends ConsumerWidget {
                 title: Text(group['name'], style: const TextStyle(fontWeight: FontWeight.bold)),
                 subtitle: const Text("Voir le fil d'actualité"),
                 onTap: () {
-                  // TODO: Naviguer vers le feed spécifique de ce groupe
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GroupFeedScreen(group: group),
+                    ),
+                  );
                 },
               ),
             );
