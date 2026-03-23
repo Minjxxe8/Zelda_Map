@@ -67,18 +67,18 @@ class PhotoRepository {
         profile['id'] as String: (profile['username'] ?? 'Inconnu') as String,
     };
 
-    /* final likesResponse = await _supabase
+    final likesResponse = await _supabase
         .from('photo_likes')
-        .select('photo_id, user_id')
-        .inFilter('photo_id', photoIds);
+        .select('photo, user')
+        .inFilter('photo', photoIds);
 
     final likes = List<Map<String, dynamic>>.from(likesResponse);
     final likesPerPhoto = <String, int>{};
     final likedByCurrentUser = <String>{};
 
     for (final like in likes) {
-      final photoId = like['photo_id'] as String?;
-      final userId = like['user_id'] as String?;
+      final photoId = like['photo'] as String?;
+      final userId = like['user'] as String?;
       if (photoId == null) {
         continue;
       }
@@ -86,7 +86,7 @@ class PhotoRepository {
       if (currentUserId != null && userId == currentUserId) {
         likedByCurrentUser.add(photoId);
       }
-    } */
+    }
 
     return photos.map((photo) {
       final photoId = photo['id'] as String;
@@ -98,8 +98,8 @@ class PhotoRepository {
         imageUrl: photo['image_url'] as String,
         caption: photo['caption'] as String?,
         postedAt: DateTime.parse(photo['created_at'] as String).toLocal(),
-        // likesCount: likesPerPhoto[photoId] ?? 0,
-        // isLikedByCurrentUser: likedByCurrentUser.contains(photoId),
+        likesCount: likesPerPhoto[photoId] ?? 0,
+        isLikedByCurrentUser: likedByCurrentUser.contains(photoId),
       );
     }).toList();
   }
@@ -107,23 +107,23 @@ class PhotoRepository {
   Future<void> togglePhotoLike(String photoId, String userId) async {
     final existingLike = await _supabase
         .from('photo_likes')
-        .select('photo_id')
-        .eq('photo_id', photoId)
-        .eq('user_id', userId)
+        .select('photo')
+        .eq('photo', photoId)
+        .eq('user', userId)
         .maybeSingle();
 
     if (existingLike != null) {
       await _supabase
           .from('photo_likes')
           .delete()
-          .eq('photo_id', photoId)
-          .eq('user_id', userId);
+          .eq('photo', photoId)
+          .eq('user', userId);
       return;
     }
 
     await _supabase.from('photo_likes').insert({
-      'photo_id': photoId,
-      'user_id': userId,
+      'photo': photoId,
+      'user': userId,
     });
   }
 }

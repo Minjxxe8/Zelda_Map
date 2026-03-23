@@ -89,6 +89,10 @@ class _DailyPostCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authProvider).user;
+    final photoNotifier = ref.watch(photoProvider);
+    final isLiking = photoNotifier.isLiking(post.id);
+
     return Card(
       clipBehavior: Clip.antiAlias,
       elevation: 0,
@@ -162,38 +166,53 @@ class _DailyPostCard extends ConsumerWidget {
                       ),
                     ),
                     const Spacer(),
-                    /* IconButton(
-                      onPressed: user == null || isLiking
+                    InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: user == null || isLiking
                           ? null
                           : () => ref
                               .read(photoProvider)
                               .toggleLike(post.id, user.id),
-                       icon: isLiking
-                          ? const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : Icon(
-                              post.isLikedByCurrentUser
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: post.isLikedByCurrentUser
-                                  ? Colors.redAccent
-                                  : Colors.black87,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 6,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (isLiking)
+                              const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            else
+                              Icon(
+                                post.isLikedByCurrentUser
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: post.isLikedByCurrentUser
+                                    ? Colors.redAccent
+                                    : Colors.black87,
+                              ),
+                            const SizedBox(width: 6),
+                            Text(
+                              '${post.likesCount}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                    ), */
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 if ((post.caption ?? '').trim().isNotEmpty) ...[
                   const SizedBox(height: 12),
                   Text(post.caption!.trim()),
                 ],
-                const SizedBox(height: 12),
-                /* Text(
-                  '${post.likesCount} like${post.likesCount > 1 ? 's' : ''}',
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ), */
               ],
             ),
           ),

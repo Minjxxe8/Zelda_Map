@@ -12,6 +12,8 @@ class AppShell extends StatefulWidget {
 }
 
 class _AppShellState extends State<AppShell> {
+  static const _highlightColor = Color(0xFFE4DDD4);
+  static const _navigationBarColor = Color(0xFFCBC2B5);
   int _currentIndex = 0;
 
   static const _destinations = [
@@ -53,6 +55,8 @@ class _AppShellState extends State<AppShell> {
         children: pages,
       ),
       bottomNavigationBar: NavigationBar(
+        backgroundColor: _navigationBarColor,
+        indicatorColor: _highlightColor,
         selectedIndex: _currentIndex,
         destinations: _destinations,
         onDestinationSelected: (index) {

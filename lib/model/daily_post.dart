@@ -7,8 +7,8 @@ class DailyPost {
   final String imageUrl;
   final String? caption;
   final DateTime postedAt;
-  // final int likesCount;
-  // final bool isLikedByCurrentUser;
+  final int likesCount;
+  final bool isLikedByCurrentUser;
 
   const DailyPost({
     required this.id,
@@ -17,7 +17,7 @@ class DailyPost {
     required this.imageUrl,
     this.caption,
     required this.postedAt,
-    // required this.likesCount,
-    // this.isLikedByCurrentUser = false,
+    required this.likesCount,
+    this.isLikedByCurrentUser = false,
   });
 }
