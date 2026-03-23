@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'feed/feed_screen.dart';
+import 'groups/group_screen.dart';
 import 'photos/photo_capture_screen.dart';
 import 'profile/profile_screen.dart';
 import 'widgets/app_page_app_bar.dart';
@@ -17,6 +18,7 @@ class _AppShellState extends State<AppShell> {
 
   static const _titles = [
     'Accueil',
+    'Groupes',
     'Prendre une photo',
     'Profil',
   ];
@@ -25,8 +27,9 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     final pages = [
       const FeedScreen(),
+      const GroupsHubScreen(),
       const PhotoCaptureScreen(),
-      const ProfileScreen(embedded: true),
+      const ProfileScreen(),
     ];
 
     return Scaffold(
