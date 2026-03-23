@@ -10,6 +10,8 @@ import 'widgets/feed_post_card.dart';
 class FeedScreen extends ConsumerWidget {
   const FeedScreen({super.key});
 
+  static const _tabletBreakpoint = 768.0;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).user;
@@ -44,15 +46,33 @@ class FeedScreen extends ConsumerWidget {
                 return const FeedEmptyState();
               }
 
-              return Column(
-                children: posts
-                    .map(
-                      (post) => Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: FeedPostCard(post: post),
-                      ),
-                    )
-                    .toList(),
+              final isTablet =
+                  MediaQuery.sizeOf(context).width >= _tabletBreakpoint;
+
+              if (!isTablet) {
+                return Column(
+                  children: posts
+                      .map(
+                        (post) => Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: FeedPostCard(post: post),
+                        ),
+                      )
+                      .toList(),
+                );
+              }
+
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: posts.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 0.72,
+                ),
+                itemBuilder: (_, index) => FeedPostCard(post: posts[index]),
               );
             },
           ),

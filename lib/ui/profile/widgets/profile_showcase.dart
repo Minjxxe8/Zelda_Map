@@ -28,6 +28,8 @@ class ProfileShowcase extends StatelessWidget {
   Widget build(BuildContext context) {
     final stats = _ProfileStats.fromPhotos(photos);
     final memberSince = stats.memberSince;
+    final isTablet = MediaQuery.sizeOf(context).width >= 768;
+    final horizontalPadding = isTablet ? 40.0 : 20.0;
 
     return SafeArea(
       child: CustomScrollView(
@@ -35,7 +37,7 @@ class ProfileShowcase extends StatelessWidget {
         slivers: [
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
+              padding: EdgeInsets.fromLTRB(horizontalPadding, 14, horizontalPadding, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -70,7 +72,10 @@ class ProfileShowcase extends StatelessWidget {
             child: _SectionHeader(title: 'Cette semaine'),
           ),
           SliverToBoxAdapter(
-            child: _WeekStrip(entries: _buildWeekEntries(photos)),
+            child: _WeekStrip(
+              entries: _buildWeekEntries(photos),
+              horizontalPadding: horizontalPadding,
+            ),
           ),
           SliverToBoxAdapter(
             child: _SectionHeader(
@@ -81,7 +86,7 @@ class ProfileShowcase extends StatelessWidget {
           if (footer != null)
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
+                padding: EdgeInsets.fromLTRB(horizontalPadding, 24, horizontalPadding, 32),
                 child: footer!,
               ),
             ),
@@ -437,15 +442,19 @@ class _SectionHeader extends StatelessWidget {
 
 class _WeekStrip extends StatelessWidget {
   final List<_WeekEntry> entries;
+  final double horizontalPadding;
 
-  const _WeekStrip({required this.entries});
+  const _WeekStrip({
+    required this.entries,
+    required this.horizontalPadding,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 72,
       child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
         scrollDirection: Axis.horizontal,
         itemCount: entries.length,
         separatorBuilder: (_, __) => const SizedBox(width: 8),
@@ -524,13 +533,15 @@ class _PhotoGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).width >= 768;
+
     return SliverGrid(
       delegate: SliverChildBuilderDelegate(
         (context, i) => _GridCell(entry: entries[i]),
         childCount: entries.length,
       ),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: isTablet ? 4 : 3,
         mainAxisSpacing: 2,
         crossAxisSpacing: 2,
       ),

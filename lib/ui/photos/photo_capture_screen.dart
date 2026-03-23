@@ -7,6 +7,8 @@ import '../feed/widgets/app_colors.dart';
 class PhotoCaptureScreen extends ConsumerWidget {
   const PhotoCaptureScreen({super.key});
 
+  static const _tabletBreakpoint = 768.0;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).user;
@@ -18,13 +20,14 @@ class PhotoCaptureScreen extends ConsumerWidget {
     }
 
     final isUploading = ref.watch(photoProvider).isUploading;
+    final isTablet = MediaQuery.sizeOf(context).width >= _tabletBreakpoint;
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(isTablet ? 40 : 24),
         child: SizedBox(
-          width: double.infinity,
-          height: 220,
+          width: isTablet ? 460 : double.infinity,
+          height: isTablet ? 280 : 220,
           child: FilledButton.icon(
             onPressed: isUploading
                 ? null
@@ -37,11 +40,11 @@ class PhotoCaptureScreen extends ConsumerWidget {
                     height: 36,
                     child: CircularProgressIndicator(strokeWidth: 3),
                   )
-                : const Icon(Icons.photo_camera, size: 42),
+                : Icon(Icons.photo_camera, size: isTablet ? 56 : 42),
             label: Text(
               isUploading ? 'Ouverture...' : 'Ouvrir la camera',
-              style: const TextStyle(
-                fontSize: 24,
+              style: TextStyle(
+                fontSize: isTablet ? 28 : 24,
                 fontWeight: FontWeight.bold,
               ),
             ),

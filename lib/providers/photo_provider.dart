@@ -36,7 +36,6 @@ class PhotoProvider extends ChangeNotifier {
         await _repo.savePhotoData(userId, url, caption ?? "Ma nouvelle photo !");
         ref.invalidate(userPhotosProvider(userId));
         ref.invalidate(dailyFeedProvider);
-
       } catch (e) {
         print("ERREUR : $e");
       } finally {
